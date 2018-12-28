@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="infile.pattern" value="%msg%n" />
+    <property name="logback.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" />
+    
+    <appender name="infile-movie" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>infiles/电影.txt</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>../infiles/电影%d{yyyyMMdd}.txt</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${infile.pattern}</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="infile-tv" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>infiles/电视剧.txt</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>../infiles/电视剧%d{yyyyMMdd}.txt</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${infile.pattern}</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="infile-variety" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>infiles/综艺.txt</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>../infiles/综艺%d{yyyyMMdd}.txt</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${infile.pattern}</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="report" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>infiles/crawlerReport.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>../infiles/crawlerReport-%d{yyyyMMdd}.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>logs/debug.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>../logs/debug-%d{yyyyMMdd}.log</FileNamePattern>
+            <maxHistory>5</maxHistory>
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>logs/error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>../logs/error-%d{yyyyMMdd}.log</FileNamePattern>
+            <maxHistory>5</maxHistory>
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+    </appender>
+    
+    <logger name="crawler.movie" level="DEBUG" additivity="false">
+        <appender-ref ref="report"/>
+        <appender-ref ref="infile-movie"/>
+        <appender-ref ref="error"/>
+    </logger>
+    <logger name="crawler.tv" level="DEBUG" additivity="false">
+        <appender-ref ref="report"/>
+        <appender-ref ref="infile-tv"/>
+        <appender-ref ref="error"/>
+    </logger>
+    <logger name="crawler.variety" level="DEBUG" additivity="false">
+        <appender-ref ref="report"/>
+        <appender-ref ref="infile-variety"/>
+        <appender-ref ref="error"/>
+    </logger>
+    
+    <root level="DEBUG">
+        <appender-ref ref="debug"/>
+        <appender-ref ref="error"/>
+    </root>
+    
+</configuration>

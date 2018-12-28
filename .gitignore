@@ -1,0 +1,10 @@
+/target/
+/logs/
+.DS_Store
+.classpath
+.project
+.settings
+/assembly/lib/app.jar
+*.iml
+.idea
+/.apt_generated
