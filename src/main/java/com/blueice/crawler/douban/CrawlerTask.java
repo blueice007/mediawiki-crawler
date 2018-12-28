@@ -62,20 +62,32 @@ public class CrawlerTask implements Runnable
     @Override
     public void run()
     {
-        JSONArray data;
+        JSONArray data = null;
         JSONObject subject;
         int tryCount=0;
         int wikiIndex=this.start;
         logger.debug("crawler start:tags:{};sort:{};start_index:{}",tags.getTag(),this.sort,wikiIndex);
         while(!isFinish) {
             tryCount = reTryCount;
+            data = null;
             try
             {
-                data = JSON.parseObject(HttpUtil.get(HttpUtil.appendQueryParams(sourceUrl,param))).getJSONArray("data");
                 while(data==null&&tryCount-->0) {
-                    // 豆瓣接口调用暂时受限了
-                    Thread.sleep(sleepSecond*60*1000);
-                    data = JSON.parseObject(HttpUtil.get(HttpUtil.appendQueryParams(sourceUrl,param))).getJSONArray("data");
+                    try
+                    {
+                        data = JSON.parseObject(HttpUtil.get(HttpUtil.appendQueryParams(sourceUrl,param))).getJSONArray("data");
+                    }
+                    catch (Exception e)
+                    {
+                        logger.error("web请求list失败,"+sleepSecond+"分钟后再尝试，剩余尝试次数:"+tryCount, e);
+                        try
+                        {
+                            Thread.sleep(sleepSecond*60*1000);
+                        }
+                        catch (InterruptedException e1)
+                        {
+                        }
+                    }
                 }
                 if(data==null) {//多次重试后无数据，即接口被限 退出
                     throw new IOException("接口请求受限:"+HttpUtil.appendQueryParams(sourceUrl,param));
