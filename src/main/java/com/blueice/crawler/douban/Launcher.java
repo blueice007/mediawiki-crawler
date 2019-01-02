@@ -62,7 +62,7 @@ public class Launcher
             }
         }
         System.out.println("crawler start ...");
-        new Thread(new CrawlerTask(LoggerFactory.getLogger(logName), type,start,end,sort,waitSecond))
+        new Thread(new CrawlerHtmlTask(LoggerFactory.getLogger(logName), type,start,end,sort,waitSecond))
         .start();
     }
 

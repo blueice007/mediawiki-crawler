@@ -9,9 +9,9 @@
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-        <File>infiles/电影.txt</File>
+        <File>infiles/movie.txt</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>../infiles/电影%d{yyyyMMdd}.txt</FileNamePattern>
+            <FileNamePattern>infiles/movie%d{yyyyMMdd}.txt</FileNamePattern>
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder>
@@ -26,9 +26,9 @@
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-        <File>infiles/电视剧.txt</File>
+        <File>infiles/tv.txt</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>../infiles/电视剧%d{yyyyMMdd}.txt</FileNamePattern>
+            <FileNamePattern>infiles/tv%d{yyyyMMdd}.txt</FileNamePattern>
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder>
@@ -43,9 +43,9 @@
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-        <File>infiles/综艺.txt</File>
+        <File>infiles/variety.txt</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>../infiles/综艺%d{yyyyMMdd}.txt</FileNamePattern>
+            <FileNamePattern>infiles/variety%d{yyyyMMdd}.txt</FileNamePattern>
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder>
@@ -60,9 +60,9 @@
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-        <File>infiles/crawlerReport.log</File>
+        <File>crawlerReport.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>../infiles/crawlerReport-%d{yyyyMMdd}.log</FileNamePattern>
+            <FileNamePattern>crawlerReport-%d{yyyyMMdd}.log</FileNamePattern>
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder>
@@ -79,7 +79,7 @@
         </filter>
         <File>logs/debug.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>../logs/debug-%d{yyyyMMdd}.log</FileNamePattern>
+            <FileNamePattern>logs/debug-%d{yyyyMMdd}.log</FileNamePattern>
             <maxHistory>5</maxHistory>
             <!--<totalSizeCap>1GB</totalSizeCap>-->
         </rollingPolicy>
@@ -96,7 +96,7 @@
         </filter>
         <File>logs/error.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>../logs/error-%d{yyyyMMdd}.log</FileNamePattern>
+            <FileNamePattern>logs/error-%d{yyyyMMdd}.log</FileNamePattern>
             <maxHistory>5</maxHistory>
             <!--<totalSizeCap>1GB</totalSizeCap>-->
         </rollingPolicy>

@@ -14,12 +14,12 @@ import com.blueice.crawler.douban.vo.WikiBean;
 import com.blueice.crawler.util.HttpUtil;
 
 /**
-* @Description: TODO
+* @Description: 通过豆瓣 开放api和web请求爬取数据
 * @author blueice
 * @date 2018年12月26日 下午7:44:39
 *
 */
-public class CrawlerTask implements Runnable
+public class CrawlerApiTask implements Runnable
 {
     private final static String sourceUrl="https://movie.douban.com/j/new_search_subjects";
     private final static String ARRAY_SPLIT=";";
@@ -35,7 +35,7 @@ public class CrawlerTask implements Runnable
     private final static String WEB_URL = "https://movie.douban.com/j/subject_abstract?subject_id=";
     private final static String OPENAPI_URL = "https://api.douban.com/v2/movie/subject/";
    
-    public CrawlerTask(final Logger logger,Tags tags,Integer start,Integer end,String sort, Integer sleepSecond)
+    public CrawlerApiTask(final Logger logger,Tags tags,Integer start,Integer end,String sort, Integer sleepSecond)
     {
         this.logger = logger;
         this.start = (start==null?0:start);
@@ -49,12 +49,12 @@ public class CrawlerTask implements Runnable
         param.put("sort", this.sort);
     }
     
-    public CrawlerTask(final Logger logger,Tags tags,Integer start, Integer end)
+    public CrawlerApiTask(final Logger logger,Tags tags,Integer start, Integer end)
     {
         this(logger,tags,start,end,null,null);
     }
     
-    public CrawlerTask(final Logger logger,Tags tags)
+    public CrawlerApiTask(final Logger logger,Tags tags)
     {
         this(logger,tags,null,null,null,null);
     }
@@ -90,7 +90,7 @@ public class CrawlerTask implements Runnable
                     }
                 }
                 if(data==null) {//多次重试后无数据，即接口被限 退出
-                    throw new IOException("接口请求受限:"+HttpUtil.appendQueryParams(sourceUrl,param));
+                    throw new IOException("web-list接口请求受限:"+HttpUtil.appendQueryParams(sourceUrl,param));
                 }else if(data.size()<=0) {//已无数据可爬了，退出
                     isFinish = true;
                 }else {
@@ -106,6 +106,9 @@ public class CrawlerTask implements Runnable
                         }
                         WikiBean wikiBean = new WikiBean();
                         wikiBean.setCategory(this.tags.getType());
+                        wikiBean.setTitle(subject.getString("title"));
+                        wikiBean.setCasts(formateStrBy(subject.getJSONArray("casts"),ARRAY_SPLIT));
+                        wikiBean.setDirectors(formateStrBy(subject.getJSONArray("directors"),ARRAY_SPLIT));
                         
                         parseOpenApiUrl(subject.getString("id"),wikiBean);
                         parseWebURL(subject.getString("id"),wikiBean);
@@ -170,13 +173,13 @@ public class CrawlerTask implements Runnable
             }
         }
         if(detail==null) {
-            throw new IOException("接口请求受封:"+OPENAPI_URL);
+            throw new IOException("openApi接口请求受封:"+OPENAPI_URL);
         }
         
         if(detail.containsKey("episodes_count"))
             wikiBean.setEpisodesCount(detail.getString("episodes_count"));
-        if(detail.containsKey("title"))
-            wikiBean.setTitle(detail.getString("title"));
+        /*if(detail.containsKey("title"))
+            wikiBean.setTitle(detail.getString("title"));*/
         
         if(detail.containsKey("genres")) {
             wikiBean.setGenres(formateStrBy(detail.getJSONArray("genres"),ARRAY_SPLIT));
@@ -191,7 +194,11 @@ public class CrawlerTask implements Runnable
             wikiBean.setAka(formateStrBy(detail.getJSONArray("aka"),ARRAY_SPLIT));
         }
         if(detail.containsKey("summary")) {
-            wikiBean.setSummary(detail.getString("summary"));
+            String summary = detail.getString("summary");
+            if(summary.indexOf("\n")>0) {
+                summary = summary.replaceAll("\n", " ");
+            }
+            wikiBean.setSummary(summary);
         }
     }
 
@@ -223,19 +230,18 @@ public class CrawlerTask implements Runnable
                 catch (InterruptedException e1)
                 {
                 }
-                sleepSecond++;
             }
         }
         if(detail==null) {
-            throw new IOException("接口请求受封:"+WEB_URL);
+            throw new IOException("web接口请求受封:"+WEB_URL);
         }
         
-        if(detail.containsKey("directors")) {
+        /*if(detail.containsKey("directors")) {
             wikiBean.setDirectors(formateStrBy(detail.getJSONArray("directors"),ARRAY_SPLIT));
         }
         if(detail.containsKey("actors")) {
             wikiBean.setCasts(formateStrBy(detail.getJSONArray("actors"),ARRAY_SPLIT));
-        }
+        }*/
         if(detail.containsKey("duration")) {
             wikiBean.setDuration(detail.getString("duration"));
         }
@@ -252,13 +258,17 @@ public class CrawlerTask implements Runnable
     private String formateStrBy(JSONArray jsonArray, String split)
     {
         if(jsonArray.isEmpty()) {
-            return "";
+            return null;
         }
         StringBuilder sb = new StringBuilder();
         for(Object temp:jsonArray) {
             sb.append(temp.toString()).append(split);
         }
         
-        return sb.length()>0?sb.substring(0, sb.lastIndexOf(split)):"";
+        return sb.length()>0?sb.substring(0, sb.lastIndexOf(split)):null;
+    }
+    public static void main(String[] args) throws IOException
+    {
+        System.out.println(HttpUtil.get("https://api.douban.com/v2/movie/subject/3074503"));
     }
 }

@@ -1,5 +1,7 @@
 package com.blueice.crawler.douban.vo;
 
+import java.util.Set;
+
 import com.blueice.crawler.util.GenUtil;
 
 /**
@@ -24,6 +26,9 @@ public class WikiBean
     private String duration;
     private String episodesCount;
     private String aka;
+    private String authors;
+    private String languages;
+    private String tags;
     /**
      * @return the id
      */
@@ -74,6 +79,9 @@ public class WikiBean
      */
     public void setTitle(String title)
     {
+        if(title==null) {
+            return;
+        }
         if(title.length()>128) {
             title = title.substring(0, 125)+"...";
         }
@@ -94,6 +102,9 @@ public class WikiBean
      */
     public void setDirectors(String directors)
     {
+        if(directors==null) {
+            return;
+        }
         if(directors.length()>128) {
             directors = directors.substring(0, 125)+"...";
         }
@@ -114,6 +125,9 @@ public class WikiBean
      */
     public void setCasts(String casts)
     {
+        if(casts==null) {
+            return;
+        }
         if(casts.length()>256) {
             casts = casts.substring(0, 253)+"...";
         }
@@ -134,6 +148,9 @@ public class WikiBean
      */
     public void setCountries(String countries)
     {
+        if(countries==null) {
+            return;
+        }
         if(countries.length()>128) {
             countries = countries.substring(0, 125)+"...";
         }
@@ -154,6 +171,9 @@ public class WikiBean
      */
     public void setGenres(String genres)
     {
+        if(genres==null) {
+            return;
+        }
         if(genres.length()>256) {
             genres = genres.substring(0, 253)+"...";
         }
@@ -161,6 +181,29 @@ public class WikiBean
             genres = genres.replaceAll("\"", "\\\\\"");
         }
         this.genres = genres;
+    }
+    /**
+     * @return the tags
+     */
+    public String getTags()
+    {
+        return tags==null?"\\N":formatField(tags);
+    }
+    /**
+     * @param tags the tags to set
+     */
+    public void setTags(String tags)
+    {
+        if(tags==null) {
+            return;
+        }
+        if(tags.length()>256) {
+            tags = tags.substring(0, 253)+"...";
+        }
+        if(tags.indexOf("\"")>0) {
+            tags = tags.replaceAll("\"", "\\\\\"");
+        }
+        this.tags = tags;
     }
     /**
      * @return the year
@@ -188,6 +231,9 @@ public class WikiBean
      */
     public void setSummary(String summary)
     {
+        if(summary==null) {
+            return;
+        }
         //去豆瓣水印
         if(summary.indexOf("©豆瓣")>0) {
             summary = summary.substring(0, summary.indexOf("©豆瓣"));
@@ -198,9 +244,7 @@ public class WikiBean
         if(summary.indexOf("\"")>0) {
             summary = summary.replaceAll("\"", "\\\\\"");
         }
-        if(summary.indexOf("\n")>0) {
-            summary = summary.replaceAll("\n", " ");
-        }
+        
         this.summary = summary;
     }
     /**
@@ -243,6 +287,9 @@ public class WikiBean
      */
     public void setAka(String aka)
     {
+        if(aka==null) {
+            return;
+        }
         if(aka.length()>128) {
             aka = aka.substring(0, 125)+"...";
         }
@@ -251,14 +298,63 @@ public class WikiBean
         }
         this.aka = aka;
     }
+    
+    /**
+     * @return the authors
+     */
+    public String getAuthors()
+    {
+        return authors==null?"\\N":formatField(authors);
+    }
+    /**
+     * @param authors the authors to set
+     */
+    public void setAuthors(String authors)
+    {
+        if(authors==null) {
+            return;
+        }
+        if(authors.length()>128) {
+            authors = authors.substring(0, 125)+"...";
+        }
+        if(authors.indexOf("\"")>0) {
+            authors = authors.replaceAll("\"", "\\\\\"");
+        }
+        this.authors = authors;
+    }
+    
+    /**
+     * @return the languages
+     */
+    public String getLanguages()
+    {
+        return languages==null?"\\N":formatField(languages);
+    }
+    /**
+     * @param languages the languages to set
+     */
+    public void setLanguages(String languages)
+    {
+        if(languages==null) {
+            return;
+        }
+        if(languages.length()>128) {
+            languages = languages.substring(0, 125)+"...";
+        }
+        if(languages.indexOf("\"")>0) {
+            languages = languages.replaceAll("\"", "\\\\\"");
+        }
+        this.languages = languages;
+    }
+    
     @Override
     public String toString()
     {
         //(code,name,directors,actors,category,genres,countries,duration,episode_count
         //        ,language,alias,release_date,story_author,summary,tags,thumbnails,version,website,extend,status)
         return String.format(PATTER,getId(),getTitle(),getDirectors(),getCasts(),getCategory(),
-                getGenres(),getCountries(),getDuration(),getEpisodesCount(),"\\N",getAka(),getYear(),"\\N",
-                getSummary(),getGenres(),"\\N","\\N","\\N","\\N",1);
+                getGenres(),getCountries(),getDuration(),getEpisodesCount(),getLanguages(),getAka(),getYear(),getAuthors(),
+                getSummary(),getTags(),"\\N","\\N","\\N","\\N",1);
     }
     
     public static String formatField(String fieldValue) {

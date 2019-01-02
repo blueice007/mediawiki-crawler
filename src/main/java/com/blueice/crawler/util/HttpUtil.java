@@ -1,5 +1,7 @@
 package com.blueice.crawler.util;
 
+import java.io.BufferedReader;
+
 /**
  * @file HttpUtil.java
  * 
@@ -54,6 +56,7 @@ package com.blueice.crawler.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -349,10 +352,17 @@ public class HttpUtil {
 	 */
 	static public String streamToString(InputStream in) throws IOException {
 		StringBuffer out = new StringBuffer();
-		byte[] b = new byte[4096];
+		//转成字符流读取
+		BufferedReader br= new BufferedReader(new InputStreamReader(in, "UTF-8"));
+		String temp =null;
+		while((temp=br.readLine())!=null) {
+		    out.append(temp);
+		}
+		
+		/*byte[] b = new byte[4096];
 		for (int n; (n = in.read(b)) != -1;) {
 			out.append(new String(b, 0, n,"UTF-8"));
-		}
+		}*/
 		return out.toString();
 	}
 }
