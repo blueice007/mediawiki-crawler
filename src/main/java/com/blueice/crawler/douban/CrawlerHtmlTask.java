@@ -1,5 +1,6 @@
 package com.blueice.crawler.douban;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -111,10 +112,10 @@ public class CrawlerHtmlTask implements Runnable
                         wikiBean.setCasts(formateStrBy(subject.getJSONArray("casts"),ARRAY_SPLIT));
                         wikiBean.setDirectors(formateStrBy(subject.getJSONArray("directors"),ARRAY_SPLIT));
                         
-                        parseHtml(subject.getString("id"),wikiBean);
-                        
-                        //借助logger输出infile文件
-                        logger.info(wikiBean.toString());
+                        if(parseHtml(subject.getString("id"),wikiBean)) {
+                            //借助logger输出infile文件
+                            logger.info(wikiBean.toString());
+                        }
                         wikiIndex++;
                         Thread.sleep(sleepSecond*1000);
                     }
@@ -146,7 +147,7 @@ public class CrawlerHtmlTask implements Runnable
      * @throws IOException 
     * @date 2018年12月29日 上午10:38:03
     */
-    private void parseHtml(String id, WikiBean wikiBean) throws IOException
+    private boolean parseHtml(String id, WikiBean wikiBean) throws IOException
     {
         int tryCount = reTryCount;
         String html = null;
@@ -154,6 +155,11 @@ public class CrawlerHtmlTask implements Runnable
             try
             {
                 html = HttpUtil.get(HTML_URL+id).replaceAll("\\s", "");
+            }
+            catch (FileNotFoundException e) {
+                //该id已没有对应网页内容了
+                logger.error("html请求404,subject={}对应html页面丢失",id);
+                return false;
             }
             catch (Exception e)
             {
@@ -183,7 +189,7 @@ public class CrawlerHtmlTask implements Runnable
         Set<String> tagsSet = new HashSet<String>();
         wikiBean.setGenres(pareseGenres(html,tagsSet));
         wikiBean.setTags(pareseTags(html, tagsSet));
-        
+        return true;
     }
 
 
@@ -341,8 +347,15 @@ public class CrawlerHtmlTask implements Runnable
     
     public static void main(String[] args) throws Exception
     {
-            String html = HttpUtil.get("https://movie.douban.com/j/new_search_subjects");
-            System.out.println(html);
+            try
+            {
+                String html = HttpUtil.get("https://movie.douban.com/subject/7916275/");
+                System.out.println(html);
+            }
+            catch (FileNotFoundException e)
+            {
+                System.out.println("404");
+            }
             /*WikiBean wikiBean = new WikiBean();
             wikiBean.setAka(pareseAka(html));
             wikiBean.setSummary(pareseSummary(html));
