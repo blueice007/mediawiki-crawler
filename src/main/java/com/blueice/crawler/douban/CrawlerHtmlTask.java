@@ -241,7 +241,7 @@ public class CrawlerHtmlTask implements Runnable
         String[] strArr = html.substring(start+14,
                 html.indexOf("M",start+14)).split("H");
         if(strArr.length==2) {
-            return (Integer.parseInt(strArr[0])*60+Integer.parseInt(strArr[1]))+"分钟";
+            return (Integer.parseInt(strArr[0])*60+Integer.parseInt(strArr[1]))+"";
         }else {
             return null;
         }

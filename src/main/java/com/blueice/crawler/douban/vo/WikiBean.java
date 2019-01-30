@@ -1,7 +1,5 @@
 package com.blueice.crawler.douban.vo;
 
-import java.util.Set;
-
 import com.blueice.crawler.util.GenUtil;
 
 /**
@@ -13,7 +11,7 @@ import com.blueice.crawler.util.GenUtil;
 public class WikiBean
 {
     
-    private transient static final String PATTER="%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%d";
+    private transient static final String PATTER="%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%d,%d";
     private String id;
     private String category;
     private String title;
@@ -354,7 +352,7 @@ public class WikiBean
         //        ,language,alias,release_date,story_author,summary,tags,thumbnails,version,website,extend,status)
         return String.format(PATTER,getId(),getTitle(),getDirectors(),getCasts(),getCategory(),
                 getGenres(),getCountries(),getDuration(),getEpisodesCount(),getLanguages(),getAka(),getYear(),getAuthors(),
-                getSummary(),getTags(),"\\N","\\N","\\N","\\N",1);
+                getSummary(),getTags(),"\\N","\\N","\\N","\\N",System.currentTimeMillis(),1);
     }
     
     public static String formatField(String fieldValue) {
